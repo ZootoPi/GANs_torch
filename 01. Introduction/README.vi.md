@@ -44,9 +44,12 @@ Phần tiếp theo sẽ là đi sâu vào chi tiết các thành phần và các
 
 ## Bộ Generator
 
-Như đã nói ở [phần trên](#cấu-trúc-của-gan), bộ **Generator** sẽ:
+Như đã nói ở [phần trên](#cấu-trúc-của-gan), bộ **Generator** sẽ có:
 
-- Nhận đầu vào là một
+- Đầu vào là một nhiều (random vector)
+- Đầu ra là một ảnh
+
+Kiến trúc của bộ **Generator** có thể sử dụng bất cứ kiến trúc mạng neuron nào. Để đơn giản, mình sẽ sẽ sử dụng kiến trúc mạng neuron kiểu sequence như sau:
 
 ## Bộ Discriminator
 
