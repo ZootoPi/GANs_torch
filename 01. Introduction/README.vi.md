@@ -87,4 +87,43 @@ class Generator(nn.Module):
 
 ## Bộ Discriminator
 
+Như đã giới thiệu ở các phần trên, bộ Discriminator có nhiệm vụ phân biệt đâu là ảnh chữ viết tay thật, đâu là ảnh được bộ Generator tạo ra. Vì vậy, bộ Discriminator có:
+
+- Đầu vào là một ảnh
+- Đầu ra là giá trị phân loại ảnh là thật hay giả
+
+Đây chính là bài toán phân loại ảnh thường thấy, cụ thể là [binary classification](https://en.wikipedia.org/wiki/Binary_classification). Mình cũng xây dựng bộ Discriminator một cách đơn giản như sau:
+
+![Kiến trúc bộ Discriminator](images/discriminator.png)
+
+Đầu vào của mạng là một ảnh có kích thước 28x28 và được resize về một vector 768 chiều. Tiếp theo mạng có các lớp ẩn với kích thước lần lượt 1024, 512, 256. Và cuối cùng, lớp output là vector có một chiều, đại diện cho xác suất ảnh đầu vào là ảnh thật.
+
+Dưới đây là code bộ Discriminator mình đã triển khai trong pytorch:
+
+```python
+class Discriminator(nn.Module):
+    def __init__(self):
+        super(Discriminator, self).__init__()
+
+        self.model = nn.Sequential(
+            nn.Linear(768, 1024),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(0.3),
+            nn.Linear(1024, 512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(0.3),
+            nn.Linear(512, 256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(0.3),
+            nn.Linear(256, 1),
+            nn.Sigmoid(),
+        )
+
+    def forward(self, img):
+        img_flat = img.view(img.size(0), -1)
+        output = self.model(img_flat)
+
+        return output
+```
+
 ## Huấn luyện GAN
