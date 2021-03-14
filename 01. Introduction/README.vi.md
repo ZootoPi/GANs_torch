@@ -40,16 +40,50 @@ Kiến trúc của GAN được mô tả tổng quát như sau:
 
 Hai bộ **Generator** và **Discriminator** giống như tham gia một trò chơi đối kháng, khi mà một bên giành được lợi thế thì tương ứng bên kia bị bất lợi. Trong [lý thuyết trò chơi](https://vi.wikipedia.org/wiki/L%C3%BD_thuy%E1%BA%BFt_tr%C3%B2_ch%C6%A1i), tình huống này được gọi là [trò chơi có tổng bằng không](https://vi.wikipedia.org/wiki/Tr%C3%B2_ch%C6%A1i_c%C3%B3_t%E1%BB%95ng_b%E1%BA%B1ng_kh%C3%B4ng). Bạn này hướng thú có thể đọc để tìm hiểu thêm.
 
-Phần tiếp theo sẽ là đi sâu vào chi tiết các thành phần và cách huấn luyện GAN. Để trực quan và dễ hiểu, mình sẽ lấy ví dụ bài toán xây dựng GAN để tạo ra chữ số viết tay giả, sử dụng bộ dataset quen thuộc [MNIST](http://yann.lecun.com/exdb/mnist)
+Phần tiếp theo sẽ là đi sâu vào chi tiết các thành phần và cách huấn luyện GAN. Để trực quan và dễ hiểu, mình sẽ lấy ví dụ bài toán xây dựng GAN để tạo ra chữ số viết tay giả, sử dụng bộ dataset quen thuộc [MNIST](http://yann.lecun.com/exdb/mnist). Toàn bộ phần code mình sẽ sử dụng pytorch.
 
 ## Bộ Generator
 
 Như đã nói ở [phần trên](#cấu-trúc-của-gan), bộ **Generator** sẽ có:
 
-- Đầu vào là một nhiều (random vector)
+- Đầu vào là một vector
 - Đầu ra là một ảnh
 
-Kiến trúc của bộ **Generator** có thể sử dụng bất cứ kiến trúc mạng neuron nào. Để đơn giản, mình sẽ sẽ sử dụng kiến trúc mạng neuron kiểu sequence như sau:
+Kiến trúc của bộ **Generator** có thể sử dụng bất cứ kiến trúc mạng neural nào. Mình sẽ bắt đầu với kiến trúc neural network kiểu sequence như sau:
+
+![Kiến trúc bộ Generator](images/generator.png)
+
+Input của mạng neural này mình chọn là một vector 100 chiều. Vector này sẽ được sinh random từ [normal distribution](https://en.wikipedia.org/wiki/Normal_distribution) hoặc [uniform distribution](https://en.wikipedia.org/wiki/Continuous_uniform_distribution). Trong pytorch, mình sinh ra input vector bằng dòng code sau:
+
+```python
+z = torch.FloatTensor(np.random.normal(0, 1, (latent_dim,)))
+```
+
+Sau đó, input vector sẽ được đi qua lần lượt các lớp ẩn (hidden layer) có kích thước 256, 512, 1024 và kết thúc ở lớp có kích thước 768. Kích thước các lớp ẩn có thể được chọn tuỳ ý, tuy nhiên kích thước lớp cuối cùng cần phải là 768 để có thể reshape về ảnh có kích thước 28x28 (kích thước ảnh trong bộ dataset MNIST)
+
+Bạn có thể tham khảo toàn bộ code của khối Generator:
+
+```python
+class Generator(nn.Module):
+    def __init__(self):
+        super(Generator, self).__init__()
+
+        self.model = nn.Sequential(
+            nn.Linear(latent_dim, 256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 1024),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(1024, 768),
+            nn.Sigmoid()
+        )
+
+    def forward(self, z):
+        img = self.model(z)
+        img = img.view(img.size(0), 28, 28)
+        return img
+```
 
 ## Bộ Discriminator
 
