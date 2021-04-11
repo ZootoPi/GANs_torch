@@ -131,3 +131,50 @@ class Discriminator(nn.Module):
 Dòng `img_flat = img.view(img.size(0), -1)` dùng để "duỗi thẳng" ảnh đầu vào thành một vector, làm đầu vào cho mạng. `img.size(0)` ở đây chính là `batch size`
 
 ## Huấn luyện GAN
+
+Vậy làm thế nào để huấn luyện GAN? Hàm mất mát (loss function) của GAN nên chọn như thế nào? Lan truyền ngược (backpropagation) được thực hiện như thế nào?
+
+Với GAN, chúng ta sẽ tiến hành huấn luyện 2 khối Discriminator và Generator lần lượt chứ không thực hiện huấn luyện cùng lúc.
+
+### Huấn luyện khối Discriminator
+
+Như đã nói ở trên, bài toán của khối Discriminator là bài toán phân loại ảnh thông thường. Vì vậy với khối Discriminator ta có thể sử dụng hàm mất mát là hàm [cross-entropy](https://en.wikipedia.org/wiki/Cross_entropy) và thực thực lan truyền ngược:
+
+![khối Discriminator](images/gan_diagram_discriminator.svg)
+
+> Hình ảnh lấy từ [Overview of GAN Structure](https://developers.google.com/machine-learning/gan/gan_structure)
+
+Đầu vào training cho khối Discriminator là ảnh thật lấy từ bộ dataset với nhãn được gán là 1, ảnh tạo ra từ bộ Generator với nhãn được gán là 0:
+
+```python
+bce_loss = torch.nn.BCELoss()
+valid = Variable(Tensor(batch_size, 1).fill_(1.0), requires_grad=False)
+fake = Variable(Tensor(batch_size, 1).fill_(0.0), requires_grad=False)
+
+# Sample noise as generator input
+z = Variable(Tensor(np.random.normal(0, 1, (batch_size, latent_dim))))
+
+# Measure discriminator's ability to classify real from generated samples
+real_loss = bce_loss(discriminator(real_imgs), valid)
+fake_loss = bce_loss(discriminator(generator(z)), fake)
+
+d_loss = (real_loss + fake_loss) / 2
+```
+
+Với đầu vào là `real_imgs`, đầu ra mong muốn sẽ là `valid` - một vector chứ toàn giá trị 1. Ngược lại, với đầu vào là ảnh tạo ra từ khối Generator (`generator(z)`). đầu ra mong muốn lại là `fake` - một vector chứ toàn giá trị 0.
+
+### Huấn luyện khối Generator
+
+Ngược lại với khối Discriminator, mong muốn của khối Generator lại là đánh lừa được khối Discriminator, tức là muốn đầu ra là 1 với các ảnh tạo do nó tạo ra. Mặt khác, nó cũng không quan tâm đến việc các ảnh thật được dự đoán đúng hay sai. Vì vậy, phần training cho bộ Generator chỉ cần như sau:
+
+```python
+g_loss = bce_loss(discriminator(generator(z)), valid)
+```
+
+Phần nhãn đã được chuyển từ `fake` trong công thức tính loss của Discriminator sang thành `valid`.
+
+Cách tính hàm mất mát như trên được gọi là **Minimax Loss** và đã được giới thiệu trong chính bài [báo gốc của GAN](https://arxiv.org/abs/1406.2661). Theo thời gian, nhiều kiểu tính hàm mất mát khác đã được giới thiệu, có thể kẻ đến như [**Wasserstein loss**](https://arxiv.org/abs/1701.07875) (Hàm loss mặc định của TF-GAN), [**Least Squares GAN Loss**](https://arxiv.org/abs/1611.04076) ... Mọi người có thể tìm đọc thêm để biết xem các hàm mất mát khác thì có lợi gì, được áp dụng trong các trường hợp như thế nào.
+
+## Code và kết quả
+
+Toàn bộ code demo cho bài này được viết tại file [MNIST_GAN.ipynb](MNIST_GAN.ipynb), mọi người có thể xem và chạy thử ở máy của mình hoặc chạy trực tiếp trên [google colab](https://colab.research.google.com/github/GafBof/GANs_torch/blob/master/01.%20Introduction/MNIST_GAN.ipynb). Phần code này mình có tham khảo từ repo [PyTorch-GAN](https://github.com/eriklindernoren/PyTorch-GAN) của [Erik Linder-Norén](https://github.com/eriklindernoren)
