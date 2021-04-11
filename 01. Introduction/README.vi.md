@@ -85,6 +85,8 @@ class Generator(nn.Module):
         return img
 ```
 
+Dòng `img = img.view(img.size(0), 28, 28)` dùng để resize vector đầu ra, từ vector 1x768 thành matrix 28x28
+
 ## Bộ Discriminator
 
 Như đã giới thiệu ở các phần trên, bộ Discriminator có nhiệm vụ phân biệt đâu là ảnh chữ viết tay thật, đâu là ảnh được bộ Generator tạo ra. Vì vậy, bộ Discriminator có:
@@ -125,5 +127,7 @@ class Discriminator(nn.Module):
 
         return output
 ```
+
+Dòng `img_flat = img.view(img.size(0), -1)` dùng để "duỗi thẳng" ảnh đầu vào thành một vector, làm đầu vào cho mạng. `img.size(0)` ở đây chính là `batch size`
 
 ## Huấn luyện GAN
