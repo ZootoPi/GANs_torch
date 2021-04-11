@@ -180,6 +180,7 @@ Cách tính hàm mất mát như trên được gọi là **Minimax Loss** và �
 Toàn bộ code demo cho bài này được viết tại file [MNIST_GAN.ipynb](MNIST_GAN.ipynb), mọi người có thể xem và chạy thử ở máy của mình hoặc chạy trực tiếp trên [google colab](https://colab.research.google.com/github/GafBof/GANs_torch/blob/master/01.%20Introduction/MNIST_GAN.ipynb). Phần code này mình có tham khảo từ repo [PyTorch-GAN](https://github.com/eriklindernoren/PyTorch-GAN) của [Erik Linder-Norén](https://github.com/eriklindernoren)
 
 Đây là kết quả thu được của bộ Generator sau khi huấn luyện 20 epoch:
+
 ![Generator](images/result.gif)
 
 Nhìn chung kết quả thu được cũng khá ổn, các ảnh đầu ra trông cũng khá giống với ảnh gốc và có thể nhận biết được trong ảnh là số gì :smile:
