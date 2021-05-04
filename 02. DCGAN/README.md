@@ -19,7 +19,34 @@ Bộ Discriminator như thường lệ, là một bộ phân loại ảnh sử d
 Bộ Discriminator nhận đầu vào là một ảnh có kích thước 28x28x1, đi qua 2 lớp convolution2d, được "duỗi thẳng" (flatten) và đi qua 1 lớp Dense cuối cùng để phân loại. Đây là một mô hình CNN cơ bản nên mình sẽ không đi vào quá chi tiết phần này. Dưới đây là code cho bộ Discriminator:
 
 ```python
+class Discriminator(nn.Module):
+    def __init__(self):
+        super(Discriminator, self).__init__()
 
+        self.model = nn.Sequential(
+            # input is 1 x 28 x 28
+
+            nn.Conv2d(1, 32, 4, 2, 1, bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. 32 x 14 x 14
+
+            nn.Conv2d(32, 64, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. 64) x 7 x 7
+
+            nn.Conv2d(64, 128, 3, 2, 1, bias=False),
+            nn.BatchNorm2d(128),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. 128 x 4 x 4
+
+            nn.Conv2d(128, 1, 4, 1, 0, bias=False),
+            nn.Sigmoid()
+        )
+
+    def forward(self, img):
+        output = self.model(img)
+        return output.view(-1, 1)
 ```
 
 ## Generator
@@ -31,11 +58,45 @@ Bộ Generator thì hơi ngược lại với kiến trúc CNN thường thấy,
 Dưới đây là code pytorch của bộ Generator:
 
 ```python
+class Generator(nn.Module):
+    def __init__(self):
+        super(Generator, self).__init__()
 
+        self.model = nn.Sequential(
+            nn.ConvTranspose2d(latent_dim, 128, 4, 2, 0, bias=False),
+            nn.BatchNorm2d(128),
+            nn.ReLU(True),
+            # state size. 128 x 4 x 4
+
+            nn.ConvTranspose2d(128, 64, 3, 2, 1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.ReLU(True),
+            # state size. 64 x 7 x 7
+
+            nn.ConvTranspose2d(64, 32, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(32),
+            nn.ReLU(True),
+            # state size. 32 x 14 x 14
+
+            nn.ConvTranspose2d(32, 1, 4, 2, 1, bias=False),
+            nn.Tanh()
+            # state size. 1 x 28 x 28
+        )
+
+    def forward(self, z):
+        z = z.view(*z.shape, 1, 1)
+        img = self.model(z)
+        return img
 ```
 
 ## Huấn luyện và kết quả
 
 Quá trình huấn luyện DCGAN hiện tại hoàn toàn giữ nguyên những gì đã làm với GAN, đã được trình bày trong [bài trước](). Toàn bộ code trong tutorial này được cho tại [DCGAN.ipynb](DCGAN.ipynb), mọi người hoàn toàn có thể thử chạy trực tiếp trên colab
 
+![alt](images/loss.png)
+
 Kết quả thu được sau khi train 20 epoch cũng khá khả quan :heart_eyes:
+
+|                        GAN                        |            DCGAN            |
+| :-----------------------------------------------: | :-------------------------: |
+| ![DCGAN](../01.%20Introduction/images/result.gif) | ![DCGAN](images/result.gif) |
