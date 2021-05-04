@@ -7,7 +7,7 @@
 **GAN** viết tắt của `Generative Adversarial Network` (_xin phép không dịch ra tiếng Việt_), thuộc nhóm các mô hình _generative_, có nghĩa là có khả năng sinh ra dữ liệu mới.
 
 ![stylegan2](images/stylegan2-teaser.png)
-Những hình ảnh người ở trên hoàn toàn không có thật mà được tạo ra từ mạng [StyleGAN2](https://github.com/NVlabs/stylegan2) - một kiến trúc mạng GAN do NVIDIA phát triển.
+Những hình ảnh người ở trên hoàn toàn không có thật mà được tạo ra từ mạng [StyleGAN2](https://github.com/NVlabs/stylegan2) - một kiến trúc mạng GAN do NVIDIA phát triển. Kiến trúc GAN không chỉ có thể sinh ra hình ảnh, một số biến thế của GAN có thể được dùng để sinh ra văn bản, thậm chí cả âm nhạc. Tuy nhiên ứng dụng để tạo ra hình ảnh vẫn là hướng nghiên cứu chính của GAN.
 
 Từ `Adversarial` trong GAN có nghĩa là đối nghịch do GAN có cấu trúc gồm 2 mạng có nhiệm vụ trái ngược với nhau. Chi tiết hơn về cấu trúc GAN sẽ được trình bày ở phần dưới đây:
 
