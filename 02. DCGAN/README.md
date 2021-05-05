@@ -1,6 +1,6 @@
 # Deep Convolutional Generative Adversarial Network
 
-Ở [bài trước]() chúng ta đã được giới thiệu về bài toán sinh ra chữ viết tay sử dụng mô hình GAN. Đây là một bài toán có dữ liệu là dạng hình ảnh, tuy nhiên bộ **Generator** và **Discriminator** đều đang sử dụng mạng neural thông thường. Với các bài toán dữ liệu hình ảnh thì kiến trúc mạng CNN ([Convolution Neural Network](https://en.wikipedia.org/wiki/Convolutional_neural_network)) đang được ưa chuộng và đã chứng minh hiệu quả của mình so với mạng neural truyền thống. Vậy có cách nào để kết hợp mô hình CNN với mô hình GAN không? Và hiệu quả của mô hình kết hợp đó như thế nào?
+Ở [bài trước](../01.%20Introduction/README.md) chúng ta đã được giới thiệu về bài toán sinh ra chữ viết tay sử dụng mô hình GAN. Đây là một bài toán có dữ liệu là dạng hình ảnh, tuy nhiên bộ **Generator** và **Discriminator** đều đang sử dụng mạng neural thông thường. Với các bài toán dữ liệu hình ảnh thì kiến trúc mạng CNN ([Convolution Neural Network](https://en.wikipedia.org/wiki/Convolutional_neural_network)) đang được ưa chuộng và đã chứng minh hiệu quả của mình so với mạng neural truyền thống. Vậy có cách nào để kết hợp mô hình CNN với mô hình GAN không? Và hiệu quả của mô hình kết hợp đó như thế nào?
 
 Câu trả lời chính là [Deep Convolutional Generative Adversarial Network - DCGAN](https://arxiv.org/abs/1511.06434). Về cơ bản DCGAN giữa nguyên kiến trúc của GAN gốc, chỉ thay đổi cấu tạo của bộ **Generator** và **Discriminator** từ mạng neural truyền thống sang sử dụng CNN
 
@@ -91,7 +91,7 @@ class Generator(nn.Module):
 
 ## Huấn luyện và kết quả
 
-Quá trình huấn luyện DCGAN hiện tại hoàn toàn giữ nguyên những gì đã làm với GAN, đã được trình bày trong [bài trước](). Toàn bộ code trong tutorial này được cho tại [DCGAN.ipynb](DCGAN.ipynb), mọi người hoàn toàn có thể thử chạy trực tiếp trên [colab](https://colab.research.google.com/github/GafBof/GANs_torch/blob/dcgan/02.%20DCGAN/DCGAN.ipynb). Code của phần này mình có tham khảo từ repo [example của pytorch](https://github.com/pytorch/examples/tree/master/dcgan)
+Quá trình huấn luyện DCGAN hiện tại hoàn toàn giữ nguyên những gì đã làm với GAN, đã được trình bày trong [bài trước](../01.%20Introduction/README.md#huấn-luyện-gan). Toàn bộ code trong tutorial này được cho tại [DCGAN.ipynb](DCGAN.ipynb), mọi người hoàn toàn có thể thử chạy trực tiếp trên [colab](https://colab.research.google.com/github/GafBof/GANs_torch/blob/dcgan/02.%20DCGAN/DCGAN.ipynb). Code của phần này mình có tham khảo từ repo [example của pytorch](https://github.com/pytorch/examples/tree/master/dcgan)
 
 ![alt](images/loss.png)
 
