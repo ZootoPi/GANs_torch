@@ -16,7 +16,7 @@ Bộ Discriminator như thường lệ, là một bộ phân loại ảnh sử d
 
 ![discriminator](images/discriminator.png)
 
-Bộ Discriminator nhận đầu vào là một ảnh có kích thước 28x28x1, đi qua 2 lớp convolution2d, được "duỗi thẳng" (flatten) và đi qua 1 lớp Dense cuối cùng để phân loại. Đây là một mô hình CNN cơ bản nên mình sẽ không đi vào quá chi tiết phần này. Dưới đây là code cho bộ Discriminator:
+Bộ Discriminator nhận đầu vào là một ảnh có kích thước 1x28x28, đi qua 4 lớp convolution2d để phân loại. Đây là một mô hình CNN cơ bản nên mình sẽ không đi vào quá chi tiết phần này. Dưới đây là code cho bộ Discriminator:
 
 ```python
 class Discriminator(nn.Module):
@@ -51,7 +51,7 @@ class Discriminator(nn.Module):
 
 ## Generator
 
-Bộ Generator thì hơi ngược lại với kiến trúc CNN thường thấy, khi nhận đầu vào là một vector 100 chiều, qua các lớp convolution để nhận lại được một ảnh có kích thước 28x28x1:
+Bộ Generator thì hơi ngược lại với kiến trúc CNN thường thấy, khi nhận đầu vào là một vector 100 chiều, qua các lớp convolution để nhận lại được một ảnh có kích thước 1x28x28:
 
 ![Generator](images/generator.png)
 
@@ -91,7 +91,7 @@ class Generator(nn.Module):
 
 ## Huấn luyện và kết quả
 
-Quá trình huấn luyện DCGAN hiện tại hoàn toàn giữ nguyên những gì đã làm với GAN, đã được trình bày trong [bài trước](). Toàn bộ code trong tutorial này được cho tại [DCGAN.ipynb](DCGAN.ipynb), mọi người hoàn toàn có thể thử chạy trực tiếp trên colab
+Quá trình huấn luyện DCGAN hiện tại hoàn toàn giữ nguyên những gì đã làm với GAN, đã được trình bày trong [bài trước](). Toàn bộ code trong tutorial này được cho tại [DCGAN.ipynb](DCGAN.ipynb), mọi người hoàn toàn có thể thử chạy trực tiếp trên [colab](https://colab.research.google.com/github/GafBof/GANs_torch/blob/dcgan/02.%20DCGAN/DCGAN.ipynb). Code của phần này mình có tham khảo từ repo [example của pytorch](https://github.com/pytorch/examples/tree/master/dcgan)
 
 ![alt](images/loss.png)
 
